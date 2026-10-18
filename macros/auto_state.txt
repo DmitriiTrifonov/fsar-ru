@@ -1,0 +1,5 @@
+# Press A through a scene from ANY savestate (e.g. your GUI slot copied as file) and save every dialogue window.
+# usage: tas.py <rom> macros/auto_state.txt --set CP=path/to/state.ml1 NAME=x MAX=400 --save-dir dumps/emu/auto ; then scripts/check_walk.py dumps/emu/auto x
+load_state $CP
+wait 60
+auto $NAME $MAX 60 6

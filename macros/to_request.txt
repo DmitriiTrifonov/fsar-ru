@@ -1,0 +1,24 @@
+# Needs a save with cleared requests (build/full/<rom>.sav): boots, loads Data-01, opens Edo's "Заказ" list and starts request R-$N.
+# usage: tas.py <rom> macros/to_request.txt --sav <sav> --set N=4
+wait 3000
+press START
+wait 200
+press START
+wait 200
+press START
+wait 120
+press START
+wait 120
+press A                # Начать игру -> Edo's save screen
+wait 400
+press A                # Data-01
+wait 300
+press A                # Загрузка
+wait 400
+press DOWN
+press DOWN
+press A                # Заказ
+wait 300
+request $N
+wait 900
+checkpoint request_$N

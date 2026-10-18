@@ -1,0 +1,26 @@
+# ром и всё, что из него получено
+roms/
+extracted/
+decoded/
+build/
+dumps/
+patched/
+patched_raw/
+logs/
+# бинарники и окружение
+tools/venv/
+tools/ndstool/
+tools/liblz10.dylib
+tools/rebuilt.*
+tools/melon_window_id
+tools/melonds-ctl/melonds-ctl
+*.nds
+*.ml?
+*.sav
+*.dylib
+.DS_Store
+__pycache__/
+# сгенерированное
+text/dialogue.xlsx
+text/dialogue.csv
+export/

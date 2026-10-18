@@ -1,0 +1,7 @@
+0	1. Aaaaaa	1. Ошейник
+1	Aaaa aa aaa aaaaaaaa aaaaaa aa aaaaaa a aaa aaaa aaaaaa aa aaaaa aaa aaaaaa?	Наименьшее число маршрутов собаки до хозяина?
+2	SKIP: картинка-сетка с собакой; в блок входит 2-я строка вопроса "dog must travel to reach his master?" (английская, остаётся в картинке)	
+3	2. Aaaaaaa	2. Пудинг
+4	A 12-aaaaa aaaaaa aaaaaaa aaa a aaaaaaaa aaaaaa aa 10aa aaa aa aa 3aa aaaaa. Aaaa aa aaa aaaaaa?	Пудинг в форме 12-гранной колонны имеет диагональ 10 см и толщину 3 см. Каков его объём?
+5	3. Aaaaaaaa Aaaa	3. Пояс чемпиона
+6	12 -> 3+4+5 // 30 -> ? // Aaaa aa "aaaaa aaaaaa aaaaaaaa."	12 → 3+4+5 // 30 → ? // Подсказка: «прямоугольный треугольник».

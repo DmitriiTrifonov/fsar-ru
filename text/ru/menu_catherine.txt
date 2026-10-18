@@ -1,0 +1,90 @@
+=== 2D KatharineTitleBar
+ЗАМЕТКИ
+ПУТЕВОДИТЕЛЬ
+НАХОДКИ
+СОХРАНЕНИЕ
+КОЛЛЕКЦИЯ
+
+=== 2D KatharineSaveMsg_Confirm
+{color,1}½{color,8} Сохранить? {color,1}½{color,8}
+
+=== 2D KatharineSaveMsg_Confirm_Sue
+{color,1}½{color,8} Сохранить? {color,1}½{color,8}
+
+=== 2D KatharineSaveMsg_Write_Done
+{color,1}½{color,8} Сохранено. {color,1}½{color,8}
+
+=== 2D KatharineSaveMsg_Write_Done_Sue
+{color,1}½{color,8} Сохранено. {color,1}½{color,8}
+
+=== 2D KatharineSaveMsg_Write_Failed
+{color,1}½{color,8}Сбой записи.{color,1}½{color,8}Выключите
+питание, достаньте и снова
+вставьте карту.{color,1}½{color,8}
+
+=== 2D KatharineSaveMsg_Write_Failed_Sue
+{color,1}½{color,8}Сбой записи.{color,1}½{color,8}Выключите
+питание, достаньте и снова
+вставьте карту.{color,1}½{color,8}
+
+=== 2D KatharineSaveMsg_Writing
+{color,1}½{color,8}Идёт сохранение.
+{color,1}½{color,8}Не вынимайте
+карту.{color,1}½{color,8}
+
+=== 2D KatharineSaveMsg_Writing_Sue
+{color,1}½{color,8}Идёт сохранение.
+{color,1}½{color,8}Не вынимайте
+карту.{color,1}½{color,8}
+
+=== Profile profile_type
+Персонажи
+Цели подключения
+Находки
+Призы
+Тест звука
+
+=== Profile profile_01
+СУМИО МОНДО
+
+  Добродушный парень.
+  Склонен ввязываться
+  во всё, что творится
+  вокруг него.
+  Род занятий :
+     Искатель
+  Место рождения :
+     Дальний Восток
+
+=== Profile profile_02
+ТОРИКО КУСАБИ
+
+  Девочка, у которой
+  дома живёт розовый
+  крокодил.
+  Учится на третьем
+  году средней школы.
+  Место рождения :
+     Дальний Восток
+
+=== Profile profile_03
+КРИСТИНА
+
+   Розовый крокодил
+   Торико.
+   Ест людей.
+   Место рождения :
+      Дальний Восток
+
+=== Profile profile_04
+ПИТЕР
+      БОЧЧВИНКУР
+
+  Беззаботный неряха.
+  На самом деле очень
+  важная персона.
+  Род занятий :
+     Посредник
+  Место рождения :
+     Федеративные
+     Штаты Микронезии

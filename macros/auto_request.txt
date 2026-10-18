@@ -1,0 +1,5 @@
+# Plays a whole request from its checkpoint, pressing A until the screen stops changing (free-roam/choice). Frames only where a dialogue window is visible.
+# usage: tas.py <rom> macros/auto_request.txt --set N=1 --save-dir dumps/emu/auto
+load_state states/requests/cp_request_$N.ml1
+wait 60
+auto a$N $MAX 60 6

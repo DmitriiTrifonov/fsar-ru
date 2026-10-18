@@ -1,0 +1,4 @@
+# Random walk from a checkpoint (usage: tas.py <rom> macros/roam.txt --set CP=dumps/emu/auto/a1_stall.ml1 NAME=ro1 STEPS=150 SEED=1 --save-dir dumps/emu/roam)
+load_state $CP
+wait 30
+roam $NAME $STEPS $SEED

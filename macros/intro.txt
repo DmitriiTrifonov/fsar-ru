@@ -1,0 +1,21 @@
+# Boot -> title -> New Game -> first save slot -> opening cutscene -> first dialogue ("По профессии я искатель.").
+# Frame counts are for the driver (no GUI); checkpoints are plain melonDS savestates (dumps/emu/cp_<name>.ml1).
+wait 3000              # Marvelous / reality logos
+press START
+wait 200               # FSR logo
+press START
+wait 200               # "Нажмите START" with the 3D background
+press START
+wait 120               # title menu
+press START
+wait 120               # Edo's save screen
+press A                # slot 1 (no data)
+wait 300
+press A
+wait 3000              # the drive (can be skipped with A only after the first scene)
+press A
+wait 300
+checkpoint drive_scene
+mash A 4 120
+wait 300
+checkpoint first_dialogue

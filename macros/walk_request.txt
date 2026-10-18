@@ -1,0 +1,5 @@
+# Plays the first dialogue lines of a request from its checkpoint (states/requests/cp_request_N.ml1) and shoots every line.
+# usage: tas.py <rom> macros/walk_request.txt --set N=1 [--set COUNT=60] --save-dir dumps/emu/walk
+load_state states/requests/cp_request_$N.ml1
+wait 60
+walk r$N 60 90
