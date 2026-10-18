@@ -24,3 +24,4 @@ __pycache__/
 text/dialogue.xlsx
 text/dialogue.csv
 export/
+release/*.xdelta
