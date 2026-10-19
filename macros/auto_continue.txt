@@ -1,0 +1,19 @@
+# Loads Data-01 of the 100%-save, presses "Продолжить" (first item of Edo's menu) and presses A through everything (finale, C18 ending loop).
+# usage: tas.py <rom> macros/auto_continue.txt --sav build/full/<rom>.sav --save-dir dumps/emu/cont ; scripts/check_walk.py dumps/emu/cont cont ; scripts/walk_sheets.py dumps/emu/cont cont
+wait 3000
+press START
+wait 200
+press START
+wait 200
+press START
+wait 120
+press START
+wait 120
+press A
+wait 400
+press A
+wait 300
+press A
+wait 600
+checkpoint cont
+auto cont 400 60 6
