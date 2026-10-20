@@ -1,4 +1,5 @@
 """make_release.py: build the patched ROM (build/fsar-ru.nds), make release/fsar-ru.xdelta against the original ROM and verify it by applying it.
+Before building it re-inserts the text (insert.py -> patched/) and re-renders the Guide pages (gfx_render_all.py -> patched_raw/), so the ROM never carries stale text; the table check must pass.
 Needs xdelta3 (brew install xdelta). Run only on the user's command: it rebuilds the ROM. The ROM itself is never put into git or release/."""
 import hashlib, os, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,6 +15,9 @@ def sha1(p):
 def run(*a): print("$", " ".join(a)); subprocess.run(a, check=True, cwd=ROOT)
 
 if __name__ == "__main__":
+    run(sys.executable, "scripts/check_table.py", "--col", "Русский")
+    run(sys.executable, "scripts/insert.py", "--csv", "text/dialogue.csv", "--col", "Русский")
+    run(sys.executable, "scripts/gfx_render_all.py")
     run(sys.executable, "scripts/build_rom.py", "--out=build/fsar-ru.nds")
     os.makedirs(os.path.dirname(PATCH), exist_ok=True)
     if os.path.exists(PATCH): os.remove(PATCH)
