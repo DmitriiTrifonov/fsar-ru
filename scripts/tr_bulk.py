@@ -1,11 +1,11 @@
 """Load drafts written as plain text with automatic wrapping: tr_bulk.py text/ru/C02.tr
 format:  '=== C02_01' header (scene of the chapter given in the file name, or '=== C02 C02_01'), then one reply per line:
-'ID text'. '~' in text forces a line break. Lines are balanced to <=194 px, <=3 lines; problems are reported.
+'ID text'. '~' in text forces a line break. Lines are balanced to <=188 px, <=3 lines; problems are reported.
 Writes the Russian column of text/dialogue.csv and re-exports text/ru.csv."""
 import csv, os, re, subprocess, sys
 sys.path.insert(0, os.path.dirname(__file__))
 import linewidth as L
-MAXW, MAXL = 194, 3
+MAXW, MAXL = 188, 3
 font = L.font()
 
 

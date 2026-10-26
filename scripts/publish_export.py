@@ -10,7 +10,7 @@ SKIP = (".mcp.json", "release/")
 def mask(t):
     return "".join(("A" if c.isupper() else "a") if c.isalpha() else c for c in t)
 def main(dest):
-    files = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.split("\n")
+    files = subprocess.run(["git", "-c", "core.quotepath=false", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.split("\n")
     n = 0
     for f in filter(None, files):
         if f.startswith(SKIP) or f == ".mcp.json": continue

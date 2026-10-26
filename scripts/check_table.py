@@ -1,7 +1,8 @@
 """Check the Russian column of the dialogue table against the dialogue-window limits.
-usage: check_table.py [--csv text/dialogue.csv] [--col Русский] [--max-width 194] [--max-lines 3] [--show 15]
+usage: check_table.py [--csv text/dialogue.csv] [--col Русский] [--max-width 188] [--max-lines 3] [--show 15]
 Limits measured in melonDS (2026-10-15): the game does NOT wrap or clip nicely; text starts at x=10 and must end
-before the red border at x~207 (=> 194 px by linewidth.width); more than 3 lines scrolls the window."""
+before the red border at x~207 (=> 194 px by linewidth.width); more than 3 lines scrolls the window.
+Update 2026-10-26: a window with the portrait on the LEFT starts text at x=58 and clips ink at x~245 => safe limit 188 px."""
 import argparse, csv, os, re, sys
 sys.path.insert(0, os.path.dirname(__file__))
 import linewidth as L
@@ -23,7 +24,7 @@ def menu_width(t, f):
 ap = argparse.ArgumentParser()
 ap.add_argument("--csv", default="text/dialogue.csv")
 ap.add_argument("--col", default="Русский")
-ap.add_argument("--max-width", type=int, default=194)
+ap.add_argument("--max-width", type=int, default=188)
 ap.add_argument("--max-lines", type=int, default=3)
 ap.add_argument("--show", type=int, default=15)
 a = ap.parse_args()
