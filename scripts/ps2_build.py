@@ -56,61 +56,96 @@ def pad(b, n):
     return b + b'\0' * (-len(b) % n)
 
 
-def build_scene(block, ru_lines, font, maxw, atlas_rows=512, first_y=288):
+def build_scene(block, ru_lines, font, maxw, atlas_rows=512, first_y=288, dedupe=False):
+    """ru_lines[i] = русский текст или None (строка остаётся как есть: её глифы сохраняются на местах)."""
     sc = P.parse_scene(block)
     assert len(ru_lines) == sc['nlines'], (len(ru_lines), sc['nlines'])
     gs = sc['off_gs']
     px, atlas_off = P.atlas(block, gs)
-    # глифы
+    old_g = sc['glyphs']
+    # глифы нетронутых строк: остаются на своих местах
+    kept = []
+    for i, t in enumerate(ru_lines):
+        if t is None:
+            for r in sc['lines'][i]['rows']:
+                for g in r:
+                    if g != P.SPACE and g not in kept:
+                        kept.append(g)
     chars = []
     for t in ru_lines:
-        for c in t.replace('\n', ' '):
+        for c in (t or '').replace('\n', ' '):
             if c != ' ' and c not in chars:
                 chars.append(c)
     bm, widths = {}, {}
     for c in chars:
         bm[c], widths[c] = glyph_bitmap(font, c)
-    # упаковка в атлас
-    pos, x, y = {}, 0, first_y
+    # упаковка новых глифов в свободную часть атласа (ниже first_y, мимо сохранённых)
+    busy = [(old_g[g]['x'], old_g[g]['y'], old_g[g]['w']) for g in kept]
+
+    def free(x, y, w):
+        return all(not (x < bx + bw and bx < x + w and y < by + 32 and by < y + 32) for bx, by, bw in busy)
+    pos = {}
     for c in sorted(chars, key=lambda c: -widths[c]):
         w = widths[c]
-        if x + w > 256:
-            x, y = 0, y + 32
-        if y + 32 > atlas_rows:
+        done = False
+        y = first_y
+        while y + 32 <= atlas_rows and not done:
+            x = 0
+            while x + w <= 256:
+                if free(x, y, w):
+                    pos[c] = (x, y)
+                    busy.append((x, y, w))
+                    done = True
+                    break
+                x += 1
+            y += 32
+        if not done:
             raise ValueError('атлас переполнен')
+        x, y = pos[c]
         for yy in range(32):
             for xx in range(w):
                 px[y + yy][x + xx] = bm[c][yy][xx]
-        pos[c] = (x, y)
-        x += w
-    gidx = {c: i for i, c in enumerate(chars)}
+    # новая таблица глифов: сначала сохранённые, потом новые
+    gl = [(old_g[g]['w'], old_g[g]['x'], old_g[g]['y']) for g in kept] + [(widths[c],) + pos[c] for c in chars]
+    gidx = {c: len(kept) + i for i, c in enumerate(chars)}
+    kidx = {g: i for i, g in enumerate(kept)}
     # строки
     recs = []
     for i, t in enumerate(ru_lines):
-        rows = wrap(t.replace('\n', ' '), widths, maxw)
-        if len(rows) > ROW_MAX:
-            raise ValueError('строка %d: %d рядов' % (i, len(rows)))
-        old = sc['lines'][i]['flags']
-        flags = bytes([old[0], old[1], len(rows), old[3]]) + old[4:8]
-        ptrs, body, off = [], b'', 0x18 + 4 * len(rows)
-        for r in rows:
+        old = sc['lines'][i]
+        if t is None:
+            rows_idx = [[P.SPACE if g == P.SPACE else kidx[g] for g in r] for r in old['rows']]
+            flags = bytes(old['flags'])
+        else:
+            rows = wrap(t.replace('\n', ' '), widths, maxw)
+            if len(rows) > ROW_MAX:
+                raise ValueError('строка %d: %d рядов' % (i, len(rows)))
+            rows_idx = [[P.SPACE if c == ' ' else gidx[c] for c in r] for r in rows]
+            flags = bytes([old['flags'][0], old['flags'][1], len(rows), old['flags'][3]]) + bytes(old['flags'][4:8])
+        ptrs, body, off = [], b'', 0x18 + 4 * len(rows_idx)
+        for idx in rows_idx:
             ptrs.append(off)
-            idx = [P.SPACE if c == ' ' else gidx[c] for c in r]
             chunk = pad(struct.pack('<I', len(idx)) + struct.pack('<%dH' % len(idx), *idx), 4)
             body += chunk
             off += len(chunk)
         rec = flags + struct.pack('<I', 0x18) + b'\0' * 12 + struct.pack('<%dI' % len(ptrs), *ptrs) + body
         recs.append(rec)
-    nl, ng = len(recs), len(chars)
+    nl, ng = len(recs), len(gl)
     off_lines = 0x18
     off_lines_end = off_lines + 4 * nl
     off_gl = off_lines_end + 8
     off_gl_end = off_gl + 16 * ng
     pos0 = off_gl_end + 12
-    offs, cur = [], pos0
+    offs, cur, seen, uniq = [], pos0, {}, []
     for r in recs:
+        if dedupe and r in seen:      # одинаковые реплики делят одну запись (экономия места)
+            offs.append(seen[r])
+            continue
+        seen[r] = cur
         offs.append(cur)
+        uniq.append(r)
         cur += len(r)
+    recs = uniq
     new_gs = (cur + 15) // 16 * 16
     ntex = sc['ntex']
     old_hdr = struct.unpack_from('<2I', block, off_lines_end_of(block))
@@ -123,9 +158,8 @@ def build_scene(block, ru_lines, font, maxw, atlas_rows=512, first_y=288):
     out += struct.pack('<%dI' % nl, *offs)
     out += struct.pack('<2I', new_gs, second)
     bval = struct.unpack_from('<I', block, struct.unpack_from('<I', block, 16)[0])[0]
-    for c in chars:
-        x, y = pos[c]
-        out += struct.pack('<IHHff', bval, widths[c], 32, x / 256, y / 512)
+    for w, x, y in gl:
+        out += struct.pack('<IHHff', bval, w, 32, x / 256, y / 512)
     out += b'\0' * 12
     for r in recs:
         out += r
@@ -157,7 +191,9 @@ def repack_container(data, new_blocks):
         s, z = ents[k]
         blk = new_blocks.get(k, data[s * 2048:s * 2048 + z])
         if (sec + (len(blk) + 2047) // 2048) * 2048 > len(data):
-            raise ValueError('контейнер вырос: блок %d не помещается' % k)
+            need = sum((len(new_blocks.get(j, b'x' * ents[j][1])) + 2047) // 2048 for j in range(first, len(ents)))
+            have = len(data) // 2048 - ents[first][0]
+            raise ValueError('контейнер вырос на %d секторов (блок %d не помещается)' % (need - have, k))
         buf[sec * 2048:(sec + (len(blk) + 2047) // 2048) * 2048] = b'\0' * ((len(blk) + 2047) // 2048 * 2048)
         buf[sec * 2048:sec * 2048 + len(blk)] = blk
         struct.pack_into('<2I', buf, 12 + 8 * (k - 1), sec, len(blk))
