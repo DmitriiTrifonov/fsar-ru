@@ -93,6 +93,7 @@ def draw_big():
     A("Ъ", ["###", "  #", "  #", "  #", "  ###*:", "  #  -*", "  #   #", "  #  -+", "  ###+."], 2)
     A("Ь", ["#", "#", "#", "#", "###*:", "#  -*", "#   #", "#  -+", "###+."], 2)
     A("Ы", ["#     #", "#     #", "#     #", "#     #", "###*: #", "#  -* #", "#   # #", "#  -+ #", "###+. #"], 2)
+    A("У", ["#     #", "#     #", " #   # ", " #   # ", "  # #  ", "   #   ", "  #    ", "  #    ", " #     "], 2)
     # programmatic capitals
     ART["Ж"] = (mirror_pair(f.glyph(L("K")), f.width(L("K"))[1]), 2 * f.width(L("K"))[1] - 1)
     ART["И"] = (flip(L("N")), f.width(L("N"))[1])
@@ -227,6 +228,7 @@ ADV_FIXED = {"р": f.width(L("p"))[1]}
 SRC_OF = {"к": "k", "ж": "k", "и": "n", "й": "n", "э": "c", "ю": "o", "И": "N", "Й": "N", "Я": "R", "Э": "C", "Ю": "O", "Ж": "K"}
 ALIAS = dict(zip("АВЕКМНОРСТХУЗЁ", "ABEKMHOPCTXY3Ë")) | dict(zip("аеосхуё", "aeocxyë"))   # р is separate: p has a 1 px left bearing
 ALIAS["Н"] = "H"
+if "У" in ART: del ALIAS["У"]       # big fonts draw their own Cyrillic У (Latin Y looks wrong there)
 
 # ---- choose free glyph slots: Latin-1 letters English text never uses
 used = set()
