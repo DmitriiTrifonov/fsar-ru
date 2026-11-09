@@ -54,6 +54,11 @@ def load_ru():
         t = r['Русский'].replace('\r', '').replace('\n', ' ').strip()
         if t:
             ru[(r['Сцена'], r['ID'])] = t
+    # правки только для PS2 (текст DS не трогаем): text/ps2/ru_override.tsv, например чтобы блок влез в контейнер
+    ov = 'text/ps2/ru_override.tsv'
+    if os.path.exists(ov):
+        for r in csv.DictReader(open(ov, encoding='utf-8'), delimiter='\t'):
+            ru[(r['Сцена'], r['ID'])] = r['Текст'].strip()
     return ru
 
 
@@ -68,6 +73,14 @@ def main():
     for r in csv.DictReader(open('text/ps2/map.tsv', encoding='utf-8'), delimiter='\t'):
         if r['ID'] and r['яп_без_перевода'] != '1':
             mp[(r['файл'], int(r['блок']))][int(r['строка'])] = (r['сцена'], r['ID'])
+    # строки только PS2 (нет аналога в DS): text/ps2/ru_ps2only.tsv, ключ файл/блок/строка
+    po = 'text/ps2/ru_ps2only.tsv'
+    if os.path.exists(po):
+        for r in csv.DictReader(open(po, encoding='utf-8'), delimiter='\t'):
+            if r['текст'].strip():
+                key = ('PS2', '%s:%s:%s' % (r['файл'], r['блок'], r['строка']))
+                mp[(r['файл'], int(r['блок']))][int(r['строка'])] = key
+                ru[key] = r['текст'].strip()
     fonts = [(sz, B.load_font(FONT, sz, 'Bold')) for sz in range(27, 17, -1)]
     files = sorted({k[0] for k in mp})
     if a.only:

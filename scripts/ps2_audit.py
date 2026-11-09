@@ -8,6 +8,9 @@ iso_path = sys.argv[1] if len(sys.argv) > 1 else 'build/ps2/rel.iso'
 mp = collections.defaultdict(dict)
 for r in csv.DictReader(open('text/ps2/map.tsv', encoding='utf-8'), delimiter='\t'):
     if r['ID'] and r['яп_без_перевода'] != '1': mp[(r['файл'], int(r['блок']))][int(r['строка'])] = (r['сцена'], r['ID'])
+if os.path.exists('text/ps2/ru_ps2only.tsv'):
+    for r in csv.DictReader(open('text/ps2/ru_ps2only.tsv', encoding='utf-8'), delimiter='\t'):
+        if r['текст'].strip(): mp[(r['файл'], int(r['блок']))][int(r['строка'])] = ('PS2', '%s:%s' % (r['блок'], r['строка']))
 def rowset(iso, fn):
     lba, size = A.iso_find(iso, 'DATA/EVENT/' + fn); iso.seek(lba * 2048); d = iso.read(size); ents = P.parse_container(d); out = {}
     for (f, b), lines in mp.items():
