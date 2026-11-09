@@ -39,15 +39,19 @@ def text_width(text, widths):
 
 
 def wrap(text, widths, maxw):
-    words = text.split()
+    """Перенос по пробелам; слово шире ряда (длинное через дефис) переносится после дефиса."""
+    import re
     rows, cur = [], ''
-    for w in words:
-        t = (cur + ' ' + w) if cur else w
-        if text_width(t, widths) <= maxw or not cur:
-            cur = t
-        else:
-            rows.append(cur)
-            cur = w
+    for word in text.split():
+        parts = re.findall(r'[^-]+-?|-', word) if text_width(word, widths) > maxw else [word]
+        for j, part in enumerate(parts):
+            glue = '' if j else ' '
+            t = (cur + glue + part) if cur else part
+            if text_width(t, widths) <= maxw or not cur:
+                cur = t
+            else:
+                rows.append(cur)
+                cur = part
     rows.append(cur)
     return rows
 

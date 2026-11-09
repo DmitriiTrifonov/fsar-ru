@@ -25,3 +25,4 @@ text/dialogue.xlsx
 text/dialogue.csv
 export/
 release/*.xdelta
+tools/pcsx2-ctl/pcsx2key
