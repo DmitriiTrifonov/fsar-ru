@@ -5,13 +5,9 @@
 ![Диалоги](docs/img/dialog.png)
 ![Путеводитель](docs/img/guide.png)
 
-Снимки с New Nintendo 3DS LL:
+Снимок с New Nintendo 3DS LL:
 
-![Эпилог](docs/img/3ds-1.jpg)
-![Диалог](docs/img/3ds-2.jpg)
-![Диалог](docs/img/3ds-3.jpg)
-![Диалог](docs/img/3ds-4.jpg)
-![Титры](docs/img/3ds-5.jpg)
+![Диалог на 3DS](docs/img/3ds-1.jpg)
 
 ## Что переведено
 - Диалоги всех глав (C00–C18), сообщения Кэтрин и Эдо, экран сохранений, профили.
