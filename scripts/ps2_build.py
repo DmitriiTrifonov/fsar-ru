@@ -3,6 +3,7 @@
 build_scene(block, ru_lines, font) -> bytes   новый блок (глифы, строки, атлас пересобираются)
 repack_container(data, new_blocks) -> bytes   тот же размер, сектора пересчитаны, или ValueError
 """
+import os
 import struct
 
 from PIL import Image, ImageDraw, ImageFont
@@ -27,10 +28,13 @@ def coverage_to_index(c):
     return max(1, min(15, 16 - int(round(c * 15))))
 
 
+GLYPH_PAD = int(os.environ.get('GLYPH_PAD', '1'))  # поля ячейки глифа по горизонтали (всего); чем меньше, тем плотнее текст
+
+
 def glyph_bitmap(font, ch):
-    w = int(round(font.getlength(ch))) + 2
+    w = int(round(font.getlength(ch))) + GLYPH_PAD
     im = Image.new('L', (w, 32), 0)
-    ImageDraw.Draw(im).text((1, BASE), ch, font=font, fill=255, anchor='ls')
+    ImageDraw.Draw(im).text((GLYPH_PAD // 2, BASE), ch, font=font, fill=255, anchor='ls')
     return [[coverage_to_index(im.getpixel((x, y)) / 255) for x in range(w)] for y in range(32)], w
 
 
